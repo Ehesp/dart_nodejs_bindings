@@ -5,11 +5,12 @@ import 'package:http/http.dart' as http;
 import 'module.dart';
 
 final Map<String, List<String>> modules = {
-  'fs': ['promises_api', 'synchronous_api', 'common_objects']
+  'fs': ['promises_api', 'synchronous_api', 'common_objects'],
+  'console': [''],
 };
 
 Future processModule(String module, Iterable<String> filter) async {
-  print('https://nodejs.org/docs/latest/api/$module.json');
+  print('Fetching module: https://nodejs.org/docs/latest/api/$module.json');
   final url = Uri.parse('https://nodejs.org/docs/latest/api/$module.json');
   final response = await http.get(url);
   final json = jsonDecode(response.body);

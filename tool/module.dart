@@ -1,4 +1,6 @@
-import 'api/entry_module.dart';
+import 'dart:io';
+import 'api/interface.dart';
+import 'writeable_module.dart';
 
 class Module {
   /// The raw JSON data from the Node.js API.
@@ -13,17 +15,19 @@ class Module {
   });
 
   Future generate() async {
-    final entry = EntryModule.fromJson(json);
+    final namespace = Namespace.fromJson(json);
+    final module = namespace.modules.first;
 
-    for (final submodule in entry.modules) {
-      if (submodule.modules != null) {
-        for (final module in submodule.modules!) {
-          if (filter.contains(module.name)) {
-            print(module.name);
-            print(module.methods?.length ?? 0);
-          }
+    final submodules = <Submodule>[];
+
+    if (module.modules != null) {
+      for (final submodule in module.modules!) {
+        if (filter.contains(submodule.name)) {
+          submodules.add(submodule);
         }
       }
     }
+
+    return WritableModule(module, submodules).write();
   }
 }
